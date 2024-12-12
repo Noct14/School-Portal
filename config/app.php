@@ -197,7 +197,7 @@ return [
         App\Providers\Filament\AdminPanelProvider::class,
         App\Providers\Filament\StudentPanelProvider::class,
         App\Providers\RouteServiceProvider::class,
-        Spatie\Permission\PermissionServiceProvider::class,
+        // Spatie\Permission\PermissionServiceProvider::class,
 
     ],
 

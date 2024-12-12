@@ -20,8 +20,6 @@ use Illuminate\Support\Str;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 
-
-
 class ClassroomResource extends Resource
 {
     protected static ?string $model = Classroom::class;
@@ -30,13 +28,13 @@ class ClassroomResource extends Resource
 
     protected static ?string $navigationLabel = 'Kelas';// nama side bar
 
-    public static function shouldRegisterNavigation(): bool
-    {
-        if (auth()->user()->can('classroom'))   //hide navigation
-            return true;
-        else
-            return false;
-    }
+    // public static function shouldRegisterNavigation(): bool
+    // {
+    //     if (auth()->user()->can('classroom'))   //hide navigation
+    //         return true;
+    //     else
+    //         return false;
+    // }
 
     
     public static function form(Form $form): Form

@@ -48,7 +48,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             // ->sidebarFullyCollapsibleOnDesktop(true)
             ->id('admin')
-            ->path('admin')
+            ->path('')
             ->login(Login::class)
             ->brandLogo(fn () => view('filament.admin.logo'))
             ->brandLogoHeight('80px')
@@ -86,57 +86,57 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             // ->viteTheme('resources/css/filament/admin/theme.css')
-            ->plugin(FilamentSpatieRolesPermissionsPlugin::make())
+            // ->plugin(FilamentSpatieRolesPermissionsPlugin::make())
 
-            // ->navigation(function (NavigationBuilder $builder): NavigationBuilder {
-            //     return $builder->groups([
-            //         NavigationGroup::make()
-            //             ->items([
-            //                 NavigationItem::make('Dashbo')
-            //                 ->icon('heroicon-o-home')
-            //                 ->isActiveWhen(fn (): bool => request()->routeIs('filament.admin.pages.dashboard'))
-            //                 ->url(fn (): string => Dashboard::getUrl()),
-            //                 ...UserResource::getNavigationItems(),
-            //             ]),
-            //         NavigationGroup::make('Management')
-            //             ->items([
-            //                 ...ClassroomResource::getNavigationItems(),
-            //                 ...DepartmentResource::getNavigationItems(),
-            //                 ...HomeRoomResource::getNavigationItems(),
-            //                 ...StudentHasClassResource::getNavigationItems(),
-            //                 ...CategoryNilaiResource::getNavigationItems(),
-            //                 ...StudentResource::getNavigationItems(),
-            //                 ...TeacherResource::getNavigationItems(),
-            //             ]),
-            //         NavigationGroup::make('Akademik')
-            //             ->items([
-            //                 ...NilaiResource::getNavigationItems(),
-            //                 ...SubjectResource::getNavigationItems(),
-            //             ]),
-            //         NavigationGroup::make('Setting')
-            //             ->items([
-            //                 ...PeriodeResource::getNavigationItems(),
-            //                 NavigationItem::make('Roles')
-            //                     ->icon('heroicon-o-user-group')
-            //                     ->isActiveWhen(fn (): bool => request()->routeIs([
-            //                         'filament.admin.pages.roles.index',
-            //                         'filament.admin.pages.roles.create',
-            //                         'filament.admin.pages.roles.view',
-            //                         'filament.admin.pages.roles.edit',
-            //                         ]))
-            //                     ->url(fn (): string => '/admin/roles'),
-            //                 NavigationItem::make('Permissions')
-            //                     ->icon('heroicon-o-lock-closed')
-            //                     ->isActiveWhen(fn (): bool => request()->routeIs([
-            //                         'filament.admin.pages.permissions.index',
-            //                         'filament.admin.pages.permissions.create',
-            //                         'filament.admin.pages.permissions.view',
-            //                         'filament.admin.pages.permissions.edit',
-            //                     ]))
-            //                     ->url(fn (): string => '/admin/permissions'),
-            //             ]),
-            //     ]);
-            // })
+            ->navigation(function (NavigationBuilder $builder): NavigationBuilder {
+                return $builder->groups([
+                    NavigationGroup::make()
+                        ->items([
+                            NavigationItem::make('Home')
+                            ->icon('heroicon-o-home')
+                            ->isActiveWhen(fn (): bool => request()->routeIs('filament.admin.pages.dashboard'))
+                            ->url(fn (): string => Dashboard::getUrl()),
+                            ...UserResource::getNavigationItems(),
+                        ]),
+                    NavigationGroup::make('Management')
+                        ->items([
+                            ...ClassroomResource::getNavigationItems(),
+                            ...DepartmentResource::getNavigationItems(),
+                            ...HomeRoomResource::getNavigationItems(),
+                            ...StudentHasClassResource::getNavigationItems(),
+                            ...CategoryNilaiResource::getNavigationItems(),
+                            ...StudentResource::getNavigationItems(),
+                            ...TeacherResource::getNavigationItems(),
+                        ]),
+                    NavigationGroup::make('Akademik')
+                        ->items([
+                            ...NilaiResource::getNavigationItems(),
+                            ...SubjectResource::getNavigationItems(),
+                        ]),
+                    NavigationGroup::make('Setting')
+                        ->items([
+                            ...PeriodeResource::getNavigationItems(),
+                            // NavigationItem::make('Roles')
+                            //     ->icon('heroicon-o-user-group')
+                            //     ->isActiveWhen(fn (): bool => request()->routeIs([
+                            //         'filament.admin.pages.roles.index',
+                            //         'filament.admin.pages.roles.create',
+                            //         'filament.admin.pages.roles.view',
+                            //         'filament.admin.pages.roles.edit',
+                            //         ]))
+                            //     ->url(fn (): string => '/admin/roles'),
+                            // NavigationItem::make('Permissions')
+                            //     ->icon('heroicon-o-lock-closed')
+                            //     ->isActiveWhen(fn (): bool => request()->routeIs([
+                            //         'filament.admin.pages.permissions.index',
+                            //         'filament.admin.pages.permissions.create',
+                            //         'filament.admin.pages.permissions.view',
+                            //         'filament.admin.pages.permissions.edit',
+                            //     ]))
+                            //     ->url(fn (): string => '/admin/permissions'),
+                        ]),
+                ]);
+            })
             
             ;
     }
