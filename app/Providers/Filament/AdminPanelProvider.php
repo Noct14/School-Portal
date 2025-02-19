@@ -54,7 +54,7 @@ class AdminPanelProvider extends PanelProvider
             ->login(Login::class)
             ->brandLogo(fn () => view('filament.admin.logo'))
             ->brandLogoHeight('80px')
-            ->favicon(asset('Image/logo.svg'))
+            // ->favicon(asset('Image/logo.svg'))
             ->darkMode(false)
             ->breadcrumbs(false)
             ->colors([

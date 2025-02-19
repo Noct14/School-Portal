@@ -32,7 +32,7 @@ class StudentPanelProvider extends PanelProvider
             ->login(LoginStudent::class)
             ->brandLogo(fn () => view('filament.admin.logo'))
             ->brandLogoHeight('80px')
-            ->favicon(asset('Image/logo.svg'))
+            // ->favicon(asset('Image/logo.svg'))
             ->authGuard('students')
             ->darkMode(false)
             ->breadcrumbs(false)
