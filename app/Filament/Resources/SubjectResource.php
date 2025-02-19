@@ -22,7 +22,7 @@ class SubjectResource extends Resource
 {
     protected static ?string $model = Subject::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-book-open';
 
     protected static ?string $navigationGroup = 'Akademik';//grup side bar
 
@@ -36,8 +36,8 @@ class SubjectResource extends Resource
                 TextInput::make('kode'),
                 TextInput::make('name')
                     ->live(onBlur: true)
-                    ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
-                TextInput::make('slug')
+                    // ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
+                // TextInput::make('slug')
             ]);
     }
 
@@ -47,7 +47,7 @@ class SubjectResource extends Resource
             ->columns([
                 TextColumn::make('kode'),
                 TextColumn::make('name'),
-                TextColumn::make('slug')
+                // TextColumn::make('slug')
             ])
             ->filters([
                 //
@@ -78,4 +78,6 @@ class SubjectResource extends Resource
             'edit' => Pages\EditSubject::route('/{record}/edit'),
         ];
     }
+
+    
 }

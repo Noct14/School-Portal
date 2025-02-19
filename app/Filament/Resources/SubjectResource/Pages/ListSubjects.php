@@ -17,5 +17,8 @@ class ListSubjects extends ListRecords
         ];
     }
 
-    
+    public function getTitle(): string
+    {
+        return 'Mata Pelajaran';
+    }
 }

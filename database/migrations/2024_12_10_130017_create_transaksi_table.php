@@ -17,11 +17,13 @@ return new class extends Migration
             $table->string('name');
             $table->uuid('id_tipe_transaksi');
             $table->unsignedBigInteger('amount');
-            $table->double('va_number');
+            $table->string('va_number');
+            $table->unsignedBigInteger('id_siswa');
+            $table->string('bank');
             $table->string('status');
             $table->timestamps();
 
-            $table->foreign('id_tipe_transaksi')->references('id')->on('tipe_transaksi')->onDelete('cascade');
+        
         });
     }
 

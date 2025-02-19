@@ -8,15 +8,18 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class TransaksiController extends Controller
-{
+{   
     public function pay(Request $request) 
-    {
+    {   
+        
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'id_tipe_transaksi' => 'required',
-            'bank' => 'required|in:bca,bni'
+            'bank' => 'required|in:bca,bni',
+            'students_id' => 'required|integer|exists:students,id'
             
         ]);
 
@@ -24,11 +27,11 @@ class TransaksiController extends Controller
             return response()->json(['message' => 'invalid', 'data' => $validator->errors()]);
         }
 
-        $tipetransaksi = DB::table('tipe_transaksi')->where('id', $request->id_tipe_transaksi)->first();
+        $tipetransaksi = DB::table('tagihans')->where('id_tipe_transaksi', $request->id_tipe_transaksi)->first();
         if(!$tipetransaksi) {
             return response()->json(['message' => 'Jenis Transaksi tidak Ada', 'data' => ['id_tipe_transaksi' => ['not in database']]], 422);
         }
-
+        
         try {
             DB::beginTransaction();
             $serverKey = config('midtrans.key');
@@ -37,6 +40,7 @@ class TransaksiController extends Controller
             $grossAmount = $tipetransaksi->price;
 
             $response = Http::withBasicAuth($serverKey, '')
+                ->withOptions(['verify' => false])
                 ->post('https://api.sandbox.midtrans.com/v2/charge',[
                      'payment_type' => 'bank_transfer',
                      'transaction_details' => [
@@ -47,10 +51,10 @@ class TransaksiController extends Controller
                            'bank' => $request->bank
                         ],
                         'customer_details' => [
-                            'first_name' => $request->name,
+                            'first_name' => $request->name_transaksi,
                         ]
                 ]);
-
+                
                 if($response->failed()) {
                     return response()->json(['message' => 'failed charge'], 500);
                 }
@@ -60,10 +64,11 @@ class TransaksiController extends Controller
                 }
 
                 DB::table('transaksi')->insert([
+                    'students_id' => $request->students_id,
                     'order_id' => $orderId,
                     'name' => $request->name,
                     'id_tipe_transaksi' => $request->id_tipe_transaksi,
-                    // 'bank' => $request->bank,
+                    'bank' => $request->bank,
                     'amount' => $grossAmount,
                     'va_number' => $result['va_numbers'][0]['va_number'],
                     'status' => 'Pending',

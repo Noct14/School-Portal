@@ -21,7 +21,7 @@ class NilaiResource extends Resource
 {
     protected static ?string $model = Nilai::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
 
     public static function form(Form $form): Form
     {
@@ -36,17 +36,13 @@ class NilaiResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('subject.name'),
+                TextColumn::make('category_nilai.name')
+                    ->label('Kategori Nilai'),
                 TextColumn::make('nilai'),
                 TextColumn::make('periode.name'),
-                TextColumn::make('category_nilai.name'),
             ])
             ->filters([
-                SelectFilter::make('class_id')
-                    ->options(
-                        Classroom::whereHas('students', function ($query) {
-                            $query->where('user_id', Auth::user()->id);
-                        })->groupBy('name', 'id')->pluck('name', 'id')
-                    )
+                // SelectFilter::make('class_id')
             ])
             ->actions([
                 // Tables\Actions\EditAction::make(),
@@ -76,7 +72,7 @@ class NilaiResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->whereHas('student.user', function ($query) {
+        return parent::getEloquentQuery()->whereHas('student', function ($query) {
             $query->where('id', Auth::user()->id);
         });
     }                

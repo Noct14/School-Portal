@@ -26,64 +26,126 @@ class CreateNilai extends CreateRecord
 
     protected static string $view = 'filament.resources.nilai-resource.pages.form-nilai';
 
+    // public function form(Form $form): form
+    // {
+    //     return $form->schema([
+    //         Card::make()
+    //             ->schema([
+    //                 Card::make()->schema([
+    //                     Select::make('classrooms_id')  // Ubah dari 'classrooms'
+    //                         ->options(Classroom::all()->pluck('name', 'id'))
+    //                         ->label('Kelas')
+    //                         ->live()
+    //                         ->afterStateUpdated(function (Set $set) {
+    //                             $set('student', null);
+    //                             $set('periode', null);
+    //                         }),
+    //                 Select::make('periode')
+    //                     ->options(Periode::all()->pluck('name', 'id'))
+    //                     ->label('Periode')
+    //                     ->live()
+    //                     ->preload()
+    //                     ->afterStateUpdated(fn (Set $set)=> $set('student', null)),
+                    
+    //                 Select::make('subject_id')
+    //                     ->options(Subject::all()->pluck('name', 'id'))    
+    //                     ->label('Mata Pelajaran')
+    //                     ->required(),
+    //                 Select::make('category_nilai')
+    //                     ->options(CategoryNilai::all()->pluck('name', 'id'))
+    //                     ->label('Kategori Nilai')
+    //                     ->required()
+    //                     ->columnSpan(3),
+    //                 ]),
+    //                 Repeater::make('nilaiStudents')
+    //                     ->schema(fn (Get $get): array =>   [
+    //                     Select::make('students')
+    //                         ->options(function () use ($get) {
+    //                             $data = Student::whereIn('id', function ($query) use ($get) {
+    //                                 $query->select('students_id')
+    //                                     ->from('student_has_classes')
+    //                                     ->where('classrooms_id', $get('classrooms_id'))
+    //                                     ->where('periode_id', $get('periode'))
+    //                                     ->where('is_open', true)->pluck('students_id');
+    //                             })
+    //                             ->pluck('name', 'id');
+    //                             return $data;
+    //                     })
+    //                     ->label('Siswa'),
+    //                     TextInput::make('nilai')
+    //                         ->required()
+    //                         ->rules([
+    //                             fn (Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
+    //                                 if ($get('nilai') > 100) {
+    //                                     $fail('Nilai tidak boleh lebih dari 100');
+    //                                 }
+    //                             },
+    //                         ])
+    //                 ])->columns(2)
+    //             ])
+    //             ]);
+    // }
+
+    
     public function form(Form $form): form
     {
         return $form->schema([
             Card::make()
                 ->schema([
-                    Card::make()->schema([
-                        Select::make('classrooms')
+                    // Kode untuk Select dan form lainnya
+                    Select::make('class_id')  // Ubah dari 'classrooms_id' menjadi 'class_id'
                         ->options(Classroom::all()->pluck('name', 'id'))
                         ->label('Kelas')
                         ->live()
-                        ->afterStateUpdated(function (Set $set){
-                            $set('student', null);
-                            $set('periode', null);
+                        ->afterStateUpdated(function (Set $set) {
+                            $set('students_id', null); 
+                            $set('periode_id', null);  
                         }),
-                    Select::make('periode')
+
+                    Select::make('periode_id') 
                         ->options(Periode::all()->pluck('name', 'id'))
                         ->label('Periode')
                         ->live()
                         ->preload()
-                        ->afterStateUpdated(fn (Set $set)=> $set('student', null)),
-                    
+                        ->afterStateUpdated(fn (Set $set) => $set('students_id', null)),
+
                     Select::make('subject_id')
-                        ->options(Subject::all()->pluck('name', 'id'))    
+                        ->options(Subject::all()->pluck('name', 'id'))
                         ->label('Mata Pelajaran')
                         ->required(),
-                    Select::make('category_nilai')
+
+                    Select::make('category_nilai_id')
                         ->options(CategoryNilai::all()->pluck('name', 'id'))
                         ->label('Kategori Nilai')
                         ->required()
                         ->columnSpan(3),
-                    ]),
-                    Repeater::make('nilaiStudents')
-                        ->schema(fn (Get $get): array =>   [
-                        Select::make('students')
-                            ->options(function () use ($get) {
-                                $data = Student::whereIn('id', function ($query) use ($get) {
-                                    $query->select('students_id')
-                                        ->from('student_has_classes')
-                                        ->where('homerooms_id', $get('classrooms'))
-                                        ->where('periode_id', $get('periode'))
-                                        ->where('is_open', true)->pluck('students_id');
-                                })
-                                ->pluck('name', 'id');
-                                return $data;
+                ]),
+
+            Repeater::make('nilaiStudents')
+                ->schema(fn (Get $get): array => [
+                    Select::make('students_id') 
+                        ->options(function () use ($get) {
+                            return Student::whereIn('id', function ($query) use ($get) {
+                                $query->select('students_id')
+                                    ->from('student_has_classes')
+                                    ->where('classrooms_id', $get('class_id'))
+                                    ->where('periode_id', $get('periode_id'))
+                                    ->pluck('students_id');
+                            })->pluck('name', 'id');
                         })
                         ->label('Siswa'),
-                        TextInput::make('nilai')
-                            ->required()
-                            ->rules([
-                                fn (Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
-                                    if ($get('nilai') > 100) {
-                                        $fail('Nilai tidak boleh lebih dari 100');
-                                    }
-                                },
-                            ])
-                    ])->columns(2)
-                ])
-                ]);
+
+                    TextInput::make('nilai')
+                        ->required()
+                        ->rules([
+                            fn (Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
+                                if ($get('nilai') > 100) {
+                                    $fail('Nilai tidak boleh lebih dari 100');
+                                }
+                            },
+                        ])
+                ])->columns(2)
+        ]);
     }
 
     public function save(){
@@ -92,12 +154,11 @@ class CreateNilai extends CreateRecord
         $insert = [];
         foreach ($get['nilaiStudents'] as $row) {
             array_push($insert, [
-                'class_id' => $get['classrooms'],
-                'student_id' => $row['students'],
-                'periode_id' => $get['periode'],
-                'teacher_id' => auth()->user()->id,
+                'class_id' => $get['class_id'],
+                'students_id' => $row['students_id'],
+                'periode_id' => $get['periode_id'],
                 'subject_id' => $get['subject_id'],
-                'category_nilai_id' => $get['category_nilai'],
+                'category_nilai_id' => $get['category_nilai_id'],
                 'nilai' => $row['nilai']
             ]);
         }

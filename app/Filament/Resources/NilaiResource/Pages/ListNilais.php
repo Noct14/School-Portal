@@ -14,8 +14,8 @@ class ListNilais extends ListRecords
     {   
         $decodeQueryString = urldecode(request()->getQueryString());
         return [
-            Actions\Action::make('Export')
-            ->url(url('/export-nilai?'.$decodeQueryString)),
+            // Actions\Action::make('Export')
+            // ->url(url('/export-nilai?'.$decodeQueryString)),
             Actions\CreateAction::make(),
         ];
     }

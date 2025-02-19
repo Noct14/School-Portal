@@ -18,14 +18,13 @@ return new class extends Migration
             $table->enum('gender',['Male','Female'])->default('Male');
             $table->date('birthday')->nullable();
             $table->enum('religion',['Islam', 'Katolik', 'Protestan', 'Hindu', 'Buddha', 'Khonghucu'])->default('Islam');
+            $table->unsignedBigInteger('diskon')->nullable();
             $table->string('contact')->nullable();
-            $table->string('profile')->nullable();
-            $table->enum('status',['accept', 'off', 'move', 'grade']);
-            $table->unsignedBigInteger('class_id');
+            $table->string('password');
             $table->timestamps();
 
 
-            $table->foreign('class_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
+            
         });
     }
 

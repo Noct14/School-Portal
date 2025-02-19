@@ -13,6 +13,8 @@ use App\Filament\Resources\StudentHasClassResource;
 use App\Filament\Resources\StudentResource;
 use App\Filament\Resources\SubjectResource;
 use App\Filament\Resources\TeacherResource;
+use App\Filament\Resources\TipeTransaksiResource;
+use App\Filament\Resources\TransaksiResource;
 use App\Filament\Resources\UserResource;
 use App\Filament\Widgets\StatsOverview;
 use Filament\Facades\Filament;
@@ -48,11 +50,13 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             // ->sidebarFullyCollapsibleOnDesktop(true)
             ->id('admin')
-            ->path('')
+            ->path('admin')
             ->login(Login::class)
             ->brandLogo(fn () => view('filament.admin.logo'))
             ->brandLogoHeight('80px')
             ->favicon(asset('Image/logo.svg'))
+            ->darkMode(false)
+            ->breadcrumbs(false)
             ->colors([
                 'danger' => Color::Rose,
                 'gray' => Color::Gray,
@@ -68,7 +72,6 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
                 StatsOverview::class,
             ])
             ->middleware([
@@ -85,7 +88,7 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
-            // ->viteTheme('resources/css/filament/admin/theme.css')
+            ->viteTheme('resources/css/filament/admin/theme.css')
             // ->plugin(FilamentSpatieRolesPermissionsPlugin::make())
 
             ->navigation(function (NavigationBuilder $builder): NavigationBuilder {
@@ -100,22 +103,23 @@ class AdminPanelProvider extends PanelProvider
                         ]),
                     NavigationGroup::make('Management')
                         ->items([
-                            ...ClassroomResource::getNavigationItems(),
-                            ...DepartmentResource::getNavigationItems(),
-                            ...HomeRoomResource::getNavigationItems(),
-                            ...StudentHasClassResource::getNavigationItems(),
-                            ...CategoryNilaiResource::getNavigationItems(),
+                            ...TransaksiResource::getNavigationItems(),
+                            // ...TipeTransaksiResource::getNavigationItems(),
+                            // ...DepartmentResource::getNavigationItems(),
                             ...StudentResource::getNavigationItems(),
-                            ...TeacherResource::getNavigationItems(),
                         ]),
                     NavigationGroup::make('Akademik')
                         ->items([
-                            ...NilaiResource::getNavigationItems(),
+                            ...CategoryNilaiResource::getNavigationItems(),
                             ...SubjectResource::getNavigationItems(),
+                            ...NilaiResource::getNavigationItems(),
                         ]),
                     NavigationGroup::make('Setting')
                         ->items([
                             ...PeriodeResource::getNavigationItems(),
+                            ...ClassroomResource::getNavigationItems(),
+                            ...StudentHasClassResource::getNavigationItems(),
+                            // ...HomeRoomResource::getNavigationItems(),
                             // NavigationItem::make('Roles')
                             //     ->icon('heroicon-o-user-group')
                             //     ->isActiveWhen(fn (): bool => request()->routeIs([

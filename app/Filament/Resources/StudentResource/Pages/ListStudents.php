@@ -21,23 +21,23 @@ class ListStudents extends ListRecords
         ];
     }
 
-    public function getHeader(): ?View
-    {
-        $data = Actions\CreateAction::make();
-        return view('filament.custom.upload-file', compact('data'));
-    }
+    // public function getHeader(): ?View
+    // {
+    //     $data = Actions\CreateAction::make();
+    //     return view('filament.custom.upload-file', compact('data'));
+    // }
 
     public $file = '';
 
-    public function save(){
-        if ($this->file != '') {
-            Excel::import(new ImportStudents, $this->file);
-        }
+    // public function save(){
+    //     if ($this->file != '') {
+    //         Excel::import(new ImportStudents, $this->file);
+    //     }
 
-        // Student::create([
-        //     'nis' => '123',
-        //     'name' => 'test',
-        //     'gender' => 'male',
-        // ]);   
-    }
+    //     // Student::create([
+    //     //     'nis' => '123',
+    //     //     'name' => 'test',
+    //     //     'gender' => 'male',
+    //     // ]);   
+    // }
 }

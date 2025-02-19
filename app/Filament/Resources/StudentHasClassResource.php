@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\StudentHasClassResource\Pages;
 use App\Filament\Resources\StudentHasClassResource\RelationManagers;
-use App\Models\HomeRoom;
 use App\Models\Periode;
 use App\Models\Classroom;
 use App\Models\Student;
@@ -24,8 +23,14 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class StudentHasClassResource extends Resource
 {
     protected static ?string $model = StudentHasClass::class;
+    protected static ?string $navigationLabel = 'Pengaturan Kelas';//nama sidebar
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $label = 'Pengaturan Kelas';//nama tabel
+
+    protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
+    protected static ?string $slug = 'pengaturan-kelas';
+
+
 
     public static function form(Form $form): Form
     {
@@ -37,14 +42,15 @@ class StudentHasClassResource extends Resource
                             ->searchable()
                             ->options(Student::all()->pluck('name', 'id'))
                             ->label('Student'),
-                        Select::make('homerooms_id')
+                        Select::make('classroom_id')
                             ->searchable()
-                            ->options(HomeRoom::all()->pluck('classroom.name', 'id'))
+                            ->options(Classroom::all()->pluck('name'))
                             ->label('Class'),
                         Select::make('periode_id')
                             ->searchable()
-                            ->options(Periode::all()->pluck('name', 'id'))
-                            ->label('Periode'),
+                            ->options(Periode::all()->pluck('name'))
+                            ->label('Class'),
+                        
                     ])->columns(3)
             ]);
     }
@@ -54,10 +60,8 @@ class StudentHasClassResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('students.name'),
-                TextColumn::make('homeroom.classroom.name'),
-                TextColumn::make('periode.name'),
-                ToggleColumn::make('is_open')
-                    ->label('Status')
+                TextColumn::make('classrooms.name'),
+                // TextColumn::make('periode.name'),
             ])
             ->filters([
                 //

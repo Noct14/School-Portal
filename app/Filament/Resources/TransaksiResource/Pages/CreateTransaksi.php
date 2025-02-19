@@ -3,27 +3,41 @@
 namespace App\Filament\Resources\TransaksiResource\Pages;
 
 use App\Filament\Resources\TransaksiResource;
+use App\Models\Transaksi;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Http;
 use Filament\Notifications\Notification;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
 
 class CreateTransaksi extends CreateRecord
 {
     protected static string $resource = TransaksiResource::class;
-
-    // Override fungsi create default
+    
     protected function mutateFormDataBeforeCreate(array $data): array
-    {
+    {   
+        
         // Panggil API pembayaran
         $response = Http::withoutVerifying()->withHeaders([
             'Accept' => 'application/json', // Memastikan server mengembalikan JSON
         ])
         ->post(route('api.pay'), [
-            'name' => $data['name'],
+            'name' => 'test',
             'id_tipe_transaksi' => $data['id_tipe_transaksi'],
             'bank' => $data['bank'],
-        ]);
+        ])
+        ;
+
+        if (!$data['id_tipe_transaksi'] || !$data['bank']) {
+            Notification::make()
+                ->title('Missing Data')
+                ->body('Transaction type and bank are required.')
+                ->warning()
+                ->send();
+            return $data;
+        }
 
         // Periksa apakah respons valid JSON
         if ($response->header('Content-Type') !== 'application/json') {
@@ -52,7 +66,7 @@ class CreateTransaksi extends CreateRecord
         // Tampilkan notifikasi dengan VA number
         Notification::make()
             ->title('Payment created successfully')
-            ->body('VA Number: ' . $result['data']['va'])
+            ->body('VA Number: ' . $result['data']['va_number'])
             ->success()
             ->persistent()
             ->send();
@@ -62,6 +76,7 @@ class CreateTransaksi extends CreateRecord
 
         return $data;
     }
+
 
     protected function getRedirectUrl(): string
     {

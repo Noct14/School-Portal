@@ -4,7 +4,6 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Auth;
-use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -15,7 +14,7 @@ use Spatie\Permission\Traits\HasRoles;
 use App\Models\Student;
 
 
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable 
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
@@ -59,19 +58,19 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasOne(Student::class, 'user_id');
     }
 
-    public function canAccessPanel(Panel $panel): bool
-    {   
-        $user = Auth::user();
-        $roles = $user->getRoleNames();
+    // public function canAccessPanel(Panel $panel): bool
+    // {   
+    //     $user = Auth::user();
+    //     $roles = $user->getRoleNames();
 
-        if ($panel->getId() === 'admin' && $roles->contains('admin')) {
-            return true;
-        }
-        else if ($panel->getId() === 'student' && $roles->contains('student')) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
+    //     if ($panel->getId() === 'admin' && $roles->contains('admin')) {
+    //         return true;
+    //     }
+    //     else if ($panel->getId() === 'student' && $roles->contains('student')) {
+    //         return true;
+    //     }
+    //     else {
+    //         return true;
+    //     }
+    // }
 }

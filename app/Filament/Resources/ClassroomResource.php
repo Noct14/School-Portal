@@ -4,10 +4,18 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ClassroomResource\Pages;
 use App\Filament\Resources\ClassroomResource\RelationManagers;
+use App\Filament\Resources\ClassroomResource\RelationManagers\tagihanClasess;
+use App\Filament\Resources\ClassroomResource\RelationManagers\TagihanRelationManager;
+use App\Filament\Resources\ClassroomResource\RelationManagers\StudentRelationManager;
+use App\Filament\Resources\ClassroomResource\RelationManagers\StudentsRelationManager;
 use App\Filament\Resources\ClassroomResource\RelationManagers\SubjectsRelationManager;
 use App\Models\Classroom;
+use App\Models\Periode;
+use App\Models\Student;
+use App\Models\TipeTransaksi;
 use Filament\Forms;
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -24,7 +32,9 @@ class ClassroomResource extends Resource
 {
     protected static ?string $model = Classroom::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-home-modern';
+
+    // protected static ?string $navigationGroup = 'Setting';//grup sidebar
 
     protected static ?string $navigationLabel = 'Kelas';// nama side bar
 
@@ -45,7 +55,14 @@ class ClassroomResource extends Resource
                     TextInput::make('name')
                     ->live(onBlur: true)
                     ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
-                    TextInput::make('slug') 
+                    TextInput::make('slug'),
+                    Select::make('periode_id')
+                            ->searchable()
+                            ->options(Periode::all()->pluck('name', 'id'))
+                            ->label('Periode'),
+                    // Select::make('tipetransaksi_id')
+                    // ->options(TipeTransaksi::all()->pluck('name', 'id_tipe'))
+                    // ->label('Jenis Tagihan'),
                 ])           
             ]);
     }
@@ -54,8 +71,11 @@ class ClassroomResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name'),
-                TextColumn::make('slug'),
+                TextColumn::make('name')
+                    ->label('Kelas'),
+                TextColumn::make('periode.name'),
+                
+
             ])
             ->filters([
                 //
@@ -74,7 +94,8 @@ class ClassroomResource extends Resource
     public static function getRelations(): array
     {
         return [
-            SubjectsRelationManager::class
+            StudentsRelationManager::class,
+            TagihanRelationManager::class
         ];
     }
 

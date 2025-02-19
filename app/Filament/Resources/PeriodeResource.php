@@ -20,9 +20,9 @@ class PeriodeResource extends Resource
 {
     protected static ?string $model = Periode::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-calendar';
 
-    protected static ?string $navigationGroup = 'Setting';//grup sidebar
+    // protected static ?string $navigationGroup = 'Setting';//grup sidebar;
     
     protected static ?string $navigationLabel = 'Tahun Ajaran';//nama sidebar
 
@@ -40,9 +40,7 @@ class PeriodeResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Periode'),
-                ToggleColumn::make('status')
-                    ->label('Status')
+                    ->label('Periode')
             ])
             ->filters([
                 //

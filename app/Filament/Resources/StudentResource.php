@@ -15,6 +15,7 @@ use App\Filament\Resources\StudentResource\Pages;
 use App\Filament\Resources\StudentResource\RelationManagers;
 use App\Models\Student;
 use Filament\Forms;
+use Filament\Pages\Page;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -32,13 +33,14 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Infolists\Infolist;
+use Illuminate\Support\Facades\Hash;
 
 
 class StudentResource extends Resource
 {
     protected static ?string $model = Student::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     protected static ?string $navigationGroup = 'Management';//grup side bar
 
@@ -69,19 +71,13 @@ class StudentResource extends Resource
                     ->required(),
                 TextInput::make('contact')
                     ->required(),
-                FileUpload::make('profile')
-                    ->directory('students')
-                    ->required(),
-                Select::make('status')
-                    ->options(
-                        [
-                            'accept' => 'accept',
-                            'off' => 'off',
-                            'move' => 'move',
-                            'grade' => 'grade'
-                        ]
-                    )
-                    ->required(),
+                TextInput::make('password')
+                    ->password()
+                    ->dehydrateStateUsing(fn (string $state):string => Hash::make($state))
+                    ->dehydrated(fn (?string $state):bool => filled($state))
+                    ->required(fn (Page $livewire):bool => $livewire instanceof CreateRecord),
+                // TextInput::make('diskon')
+                //     ->label('Tambahkan Potongan harga'),
             ]);
     }
 
@@ -89,16 +85,16 @@ class StudentResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('Nomor')->state(
-                    static function (HasTable $livewire, \stdClass $rowLoop): string {
-                        return (string) (
-                            $rowLoop->iteration +
-                            ($livewire->getTableRecordsPerPage() * (
-                                $livewire->getTablePage() - 1
-                            ))
-                        );
-                    }
-                ),
+                // TextColumn::make('Nomor')->state(
+                //     static function (HasTable $livewire, \stdClass $rowLoop): string {
+                //         return (string) (
+                //             $rowLoop->iteration +
+                //             ($livewire->getTableRecordsPerPage() * (
+                //                 $livewire->getTablePage() - 1
+                //             ))
+                //         );
+                //     }
+                // ),
                 //nomor
 
                 TextColumn::make('nis')
@@ -113,24 +109,14 @@ class StudentResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Tanggal Lahir'),
                 TextColumn::make('contact'),
-                ImageColumn::make('profile')
-                    ->circular()
-                    ->extraImgAttributes(['img_preview'])
-                    ->toggleable(isToggledHiddenByDefault: false),
                 SelectColumn::make('religion')
                         ->options(ReligionStatus::class)
                         ->toggleable(isToggledHiddenByDefault: false),
-                TextColumn::make('status')
-                    ->formatStateUsing(fn (string $state): string => ucfirst("{$state}"))
             ])
             ->filters([
-                SelectFilter::make('status')
-                    ->options([
-                        'accept' => 'Accept',
-                        'off' => 'Off',
-                        'move' => 'Move',
-                        'grade' => 'Grade'
-                    ])
+                // SelectFilter::make('class_id')
+                //     ->options([
+                //     ])
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -138,25 +124,6 @@ class StudentResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    BulkAction::make('Change Status')
-                        ->icon('heroicon-m-check')
-                        ->requiresConfirmation()
-                        ->form([
-                            Select::make('status')
-                                ->label('Status')
-                                ->options([
-                                    'accept' => 'Accept',
-                                    'off' => 'Off',
-                                    'move' => 'Move',
-                                    'grade' => 'Grade'
-                                ])
-                                ->required()
-                                ])
-                        ->action(function (Collection $records, array $data){
-                            $records->each(function($record) use ($data) {
-                                Student::where('id', $record->id)->update(['status' => $data['status']]);
-                            });
-                        }),
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])
@@ -221,12 +188,6 @@ class StudentResource extends Resource
                                             Group::make([
                                                 TextEntry::make('religion'),
                                                 TextEntry::make('contact'),
-                                                TextEntry::make('status')
-                                                ->badge()
-                                                ->colors(['accept' => 'success',
-                                                    'off' => 'danger',
-                                                    'move' => 'warning',
-                                                    'grade' => 'warning',]),
                                                 TextEntry::make('birthday')
                                             ])
                                             ->inlineLabel()

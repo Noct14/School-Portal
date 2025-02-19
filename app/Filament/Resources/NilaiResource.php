@@ -29,7 +29,9 @@ class NilaiResource extends Resource
 {
     protected static ?string $model = Nilai::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
+
+    protected static ?string $navigationGroup = 'Nilai';//group side bar
 
     public static function form(Form $form): Form
     {
@@ -52,7 +54,7 @@ class NilaiResource extends Resource
                             ->options(CategoryNilai::all()->pluck('name', 'id'))
                             ->label('Kategori Nilai')
                             ->searchable(),
-                        Select::make('student_id')
+                        Select::make('students_id')
                             ->options(Student::all()->pluck('name', 'id'))
                             ->label('Siswa')
                             ->searchable(),

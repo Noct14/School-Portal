@@ -19,7 +19,7 @@ class Nilai extends Model
 
     public function student(): BelongsTo
     {
-        return $this->belongsTo(Student::class);
+        return $this->belongsTo(Student::class, 'students_id'); 
     }
 
     public function periode(): BelongsTo
@@ -29,12 +29,11 @@ class Nilai extends Model
 
     public function subject(): BelongsTo
     {
-        return $this->belongsTo(Subject::class);
+        return $this->belongsTo(Subject::class, 'subject_id', 'id');
     }
 
     public function category_nilai(): BelongsTo
     {
         return $this->belongsTo(CategoryNilai::class, 'category_nilai_id', 'id');
     }
-
 }

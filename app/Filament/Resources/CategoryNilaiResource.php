@@ -21,11 +21,11 @@ class CategoryNilaiResource extends Resource
 {
     protected static ?string $model = CategoryNilai::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-adjustments-horizontal';
 
-    protected static ?string $navigationGroup = 'Management';//group side bar
+    protected static ?string $navigationGroup = 'Nilai';//group side bar
 
-    protected static ?string $navigationLabel = 'kategori Nilai';// nama side bar
+    protected static ?string $navigationLabel = 'Kategori Nilai';// nama side bar
 
     
 
@@ -35,9 +35,9 @@ class CategoryNilaiResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name')
-                    ->live(onBlur: true)
-                    ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
-                TextInput::make('slug')
+                    // ->live(onBlur: true)
+                    // ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
+                // TextInput::make('slug')
             ]);
     }
 
@@ -46,7 +46,7 @@ class CategoryNilaiResource extends Resource
         return $table
             ->columns([
                     TextColumn::make('name'),
-                    TextColumn::make('slug')
+                    // TextColumn::make('slug')
             ])
             ->filters([
                 //

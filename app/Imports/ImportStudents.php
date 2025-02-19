@@ -20,7 +20,8 @@ class ImportStudents implements ToModel
             'gender' => $row[2],
             'birthday' => $row[3],
             'religion' => $row[4],
-            'contact' => $row[5]
+            'contact' => $row[5],
+            'password' => $row[6]
         ]);
     }
 }

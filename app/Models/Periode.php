@@ -4,10 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\StudentHasClass;
+
 
 class Periode extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
+
+    public function studentClasses()
+    {
+        return $this->hasMany(StudentHasClass::class, 'periode_id');
+    }
 }
